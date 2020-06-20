@@ -10,6 +10,7 @@ import fi.iki.elonen.NanoHTTPD;
 public class AndroidStaticAssetsServer extends NanoHTTPD {
     private final Context context;
     private final String folderToServe;
+    private static final String DEFAULT_STATIC_FOLDER = "dist";
 
     public AndroidStaticAssetsServer(Context context, int port, String folderToServe) throws IOException {
         super(port);
@@ -17,6 +18,10 @@ public class AndroidStaticAssetsServer extends NanoHTTPD {
         this.folderToServe = folderToServe;
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
 
+    }
+
+    public AndroidStaticAssetsServer(Context context, int port) throws IOException {
+        this(context, port, DEFAULT_STATIC_FOLDER);
     }
 
     // override here
@@ -34,7 +39,7 @@ public class AndroidStaticAssetsServer extends NanoHTTPD {
             file += "index.html";
         }
         file = onRequest(file);
-        // hello.setText(file);
+
         // TODO safe folder concatenate
         String fileWithFolder = folderToServe + file;
         try {

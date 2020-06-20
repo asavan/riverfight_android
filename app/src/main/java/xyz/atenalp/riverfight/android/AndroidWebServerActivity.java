@@ -13,38 +13,36 @@ import java.io.IOException;
 
 
 public class AndroidWebServerActivity extends Activity {
-    private static final int PORT = 8765;
-    private TextView hello;
+    private static final int STATIC_CONTENT_PORT = 8080;
+    private static final int WEB_SOCKET_PORT = 8088;
     private AndroidStaticAssetsServer server;
-    private DebugWebSocketServer webSocketServer;
-    Button btn;
-    String formatedIpAddress;
+    private WebSocketBroadcastServer webSocketServer;
+    private int ipAddress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        hello = (TextView) findViewById(R.id.hello);
+        final TextView hello = (TextView) findViewById(R.id.hello);
         TextView textIpaddr = (TextView) findViewById(R.id.ipaddr);
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         try {
-            int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-            formatedIpAddress = android.text.format.Formatter.formatIpAddress(ipAddress);
-            textIpaddr.setText("Please access! " + getHost(formatedIpAddress));
-            server = new AndroidStaticAssetsServer(getApplicationContext(), PORT, "www") {
+            ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+            textIpaddr.setText(getString(R.string.please) + getHost(ipAddress));
+            server = new AndroidStaticAssetsServer(getApplicationContext(), STATIC_CONTENT_PORT, "www") {
                 @Override
                 public String onRequest(String file) {
                     hello.setText(file);
                     return super.onRequest(file);
                 }
             };
-            webSocketServer = new DebugWebSocketServer(8088);
+            webSocketServer = new WebSocketBroadcastServer(WEB_SOCKET_PORT);
             webSocketServer.start(0);
-            btn=(Button)findViewById(R.id.button1);
+            Button btn = (Button) findViewById(R.id.button1);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String redUrl = getHost(formatedIpAddress) + "?color=red";
+                    String redUrl = getHost(ipAddress) + "?color=red";
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(redUrl)));
                 }
             });
@@ -53,8 +51,9 @@ public class AndroidWebServerActivity extends Activity {
         }
     }
 
-    private static String getHost(String formatedIpAddress) {
-        return "http://" + formatedIpAddress + ":" + PORT;
+    private static String getHost(int ipAddress) {
+        String formatedIpAddress = android.text.format.Formatter.formatIpAddress(ipAddress);
+        return "http://" + formatedIpAddress + ":" + STATIC_CONTENT_PORT;
     }
 
     @Override

@@ -6,59 +6,73 @@ import java.util.List;
 
 import fi.iki.elonen.NanoWSD;
 
-public class UserList {
-    List<User> list;
+public class WebSocketBroadcastServer extends NanoWSD {
 
-    public UserList() {
+    private final List<WebSocket> list;
+
+    public WebSocketBroadcastServer(int port) {
+        super(port);
         list = new ArrayList<>();
     }
 
-    public void addUser(User user) {
+    @Override
+    protected WebSocket openWebSocket(IHTTPSession handshake) {
+        return new DumbWebSocket(handshake, this);
+    }
+
+    @Override
+    public void stop() {
+        try {
+            disconectAll();
+        } catch (Exception ex) {
+            // ignore
+        }
+        super.stop();
+    }
+
+    void addUser(WebSocket user) {
         list.add(user);
     }
 
-    public void removeUser(User user) {
+    void removeUser(WebSocket user) {
         list.remove(user);
     }
 
     public void sendToAll(String str) {
-        for (User user :list) {
-            NanoWSD.WebSocket ws = user.webSocket;
+        for (WebSocket ws : list) {
             if (ws != null) {
                 try {
                     ws.send(str);
                 } catch (IOException e) {
                     System.out.println("sending error.....");
                     try {
-                        ws.close(NanoWSD.WebSocketFrame.CloseCode.InvalidFramePayloadData, "reqrement", false);
+                        ws.close(WebSocketFrame.CloseCode.InvalidFramePayloadData, "reqrement", false);
                     } catch (IOException e1) {
-                        // removeUser(user);
+                        throw new RuntimeException(e1);
                     }
                 }
             }
         }
     }
 
-    public void sendFrameToAll(NanoWSD.WebSocketFrame message) {
+    public void broadcast(WebSocketFrame message) {
         try {
             message.setUnmasked();
-            for (User user : list) {
-                user.webSocket.sendFrame(message);
+            for (WebSocket ws : list) {
+                ws.sendFrame(message);
             }
         } catch (IOException e) {
-            // throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
-
     }
 
     public void disconectAll() {
-        for (User user : list) {
-            NanoWSD.WebSocket ws = user.webSocket;
+        for (WebSocket ws : list) {
             if (ws != null) {
                 try {
                     ws.close(NanoWSD.WebSocketFrame.CloseCode.InvalidFramePayloadData, "reqrement", false);
                 } catch (IOException e) {
-                    // removeUser(user);
+                    throw new RuntimeException(e);
                 }
             }
         }
