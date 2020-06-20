@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">riverfight_android</string>
+    <string name="app_name">Речной бой</string>
     <string name="launch">Launch</string>
-    <string name="please">Please access! </string>
+    <string name="please">Please access %1$s!</string>
 </resources>

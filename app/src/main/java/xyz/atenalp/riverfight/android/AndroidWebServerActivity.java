@@ -28,7 +28,7 @@ public class AndroidWebServerActivity extends Activity {
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         try {
             ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-            textIpaddr.setText(getString(R.string.please) + getHost(ipAddress));
+            textIpaddr.setText(getString(R.string.please, getHost(ipAddress)));
             server = new AndroidStaticAssetsServer(getApplicationContext(), STATIC_CONTENT_PORT, "www") {
                 @Override
                 public String onRequest(String file) {
