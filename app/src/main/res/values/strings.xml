@@ -3,4 +3,12 @@
     <string name="launch">Launch in browser</string>
     <string name="launch_twa">Launch in app</string>
     <string name="please">Please access %1$s!</string>
+    <string name="asset_statements">
+    [{
+        \"relation\": [\"delegate_permission/common.handle_all_urls\"],
+        \"target\": {
+            \"namespace\": \"web\",
+            \"site\": \"https://atenalp.xyz\"}
+    }]
+    </string>
 </resources>

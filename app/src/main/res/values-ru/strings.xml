@@ -3,4 +3,12 @@
     <string name="launch">Запустить в браузере</string>
     <string name="launch_twa">Запустить</string>
     <string name="please">Зайдите на адрес %1$s!</string>
+    <string name="asset_statements">
+    [{
+        \"relation\": [\"delegate_permission/common.handle_all_urls\"],
+        \"target\": {
+            \"namespace\": \"web\",
+            \"site\": \"https://atenalp.xyz\"}
+    }]
+    </string>
 </resources>
