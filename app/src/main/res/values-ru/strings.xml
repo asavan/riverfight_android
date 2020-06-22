@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Речной бой</string>
+    <string name="launch">Запустить в браузере</string>
+    <string name="launch_twa">Запустить</string>
+    <string name="please">Зайдите на адрес %1$s!</string>
+</resources>
