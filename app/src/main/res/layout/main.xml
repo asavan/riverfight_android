@@ -6,10 +6,19 @@
     >
     <TextView
         android:id="@+id/ipaddr"
+        android:textIsSelectable="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="40dp"
         />
+    <TextView
+        android:id="@+id/ipaddr2"
+        android:textIsSelectable="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="40dp"
+        />
+
     <Button
         android:id="@+id/button1"
         android:layout_width="match_parent"
@@ -21,4 +30,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/launch_twa" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/launch_twa_atenalp" />
+
 </LinearLayout>

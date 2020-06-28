@@ -2,6 +2,7 @@
     <string name="app_name">River fight</string>
     <string name="launch">Launch in browser</string>
     <string name="launch_twa">Launch in app</string>
+    <string name="launch_twa_atenalp">Launch newest version</string>
     <string name="please">Please access %1$s!</string>
     <string name="asset_statements">
     [{
