@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -51,27 +52,28 @@ public class AndroidWebServerActivity extends Activity {
                 webSocketServer = new WebSocketBroadcastServer(WEB_SOCKET_PORT);
                 webSocketServer.start(0);
             }
-            addButton(host);
-            addButton2(host, applicationContext);
+            addButton(host, webSocketHost, host);
+            addButton2(getStaticHost(LOCAL_IP), webSocketHost, host, applicationContext);
             addButton3(WEB_GAME_URL, webSocketHost, host, applicationContext);
             launchTwa(host, webSocketHost, host, applicationContext);
         } catch (IOException e) {
             TextView textIpAddress2 = (TextView) findViewById(R.id.ipaddr2);
             textIpAddress2.setText(Arrays.toString(e.getStackTrace()));
+            Log.e("RIVER_FIGHT_TAG", "main", e);
         }
     }
 
-    private void addButton(final String host) {
+    private void addButton(final String host, String socketHost, String staticHost) {
         Button btn = (Button) findViewById(R.id.button1);
         btn.setOnClickListener(v -> {
-            Uri launchUri = Uri.parse(getLaunchUrl(host, null, null));
+            Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost));
             startActivity(new Intent(Intent.ACTION_VIEW, launchUri));
         });
     }
 
-    private void addButton2(final String host, Context context) {
+    private void addButton2(final String host, String socketHost, String staticHost, Context context) {
         Button btn = (Button) findViewById(R.id.button2);
-        btn.setOnClickListener(v -> launchTwa(host, null, null, context));
+        btn.setOnClickListener(v -> launchTwa(host, socketHost, staticHost, context));
     }
 
     private void addButton3(final String host, String socketHost, String staticHost, Context context) {
@@ -98,8 +100,8 @@ public class AndroidWebServerActivity extends Activity {
                 b.append("&sh=");
                 b.append(URLEncoder.encode(staticHost, StandardCharsets.UTF_8.toString()));
             }
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            Log.e("RIVER_FIGHT_TAG", "getLaunchUrl", e);
         }
         TextView textIpAddress2 = (TextView) findViewById(R.id.ipaddr2);
         textIpAddress2.setText(b.toString());
@@ -131,7 +133,8 @@ public class AndroidWebServerActivity extends Activity {
                 }
 
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.e("RIVER_FIGHT_TAG", "getIPAddress", e);
         }
         return null;
     }

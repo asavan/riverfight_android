@@ -1,6 +1,7 @@
 package xyz.atenalp.riverfight.android;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,17 +37,23 @@ public class AndroidStaticAssetsServer extends NanoHTTPD {
         }
         String file = session.getUri();
         if ("/".equals(file)) {
-            file += "index.html";
+            file = "index.html";
         }
-        file = onRequest(file);
 
-        // TODO safe folder concatenate
-        String fileWithFolder = folderToServe + file;
+        if (file.startsWith("/")) {
+            file = file.substring(1);
+        }
+        if (file.startsWith(".")) {
+            file = file.substring(1);
+        }
+
+        file = onRequest(file);
+        String fileWithFolder = folderToServe + "/" + file;
         try {
             InputStream is = context.getAssets().open(fileWithFolder);
             return newChunkedResponse(Response.Status.OK, getMimeTypeForFile(file), is);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("RIVER_FIGHT_TAG", "AndroidStaticAssetsServer", e);
         }
         return notFound();
     }

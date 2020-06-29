@@ -4,12 +4,12 @@
     <string name="launch_twa">Launch in app</string>
     <string name="launch_twa_atenalp">Launch newest version</string>
     <string name="please">Please access %1$s!</string>
-    <string name="asset_statements">
+    <string name="asset_statements" translatable="false">
     [{
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
         \"target\": {
             \"namespace\": \"web\",
-            \"site\": \"https://atenalp.xyz\"}
+            \"site\": \"http://127.0.0.1:8080\"}
     }]
     </string>
 </resources>
