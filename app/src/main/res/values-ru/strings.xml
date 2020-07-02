@@ -4,4 +4,10 @@
     <string name="launch_twa">Запустить</string>
     <string name="launch_twa_atenalp">Запустить новейшую версию</string>
     <string name="please">Зайдите на адрес %1$s!</string>
+    <string name="launch_determinant">Определитель</string>
+    <string name="palneta">palneta</string>
+    <string name="launch_localhost">localhost</string>
+    <string name="other_games">Другие игры</string>
+    <string name="launch_real_ip">Real IP</string>
+    <string name="launch_twa_local">Launch in app local</string>
 </resources>

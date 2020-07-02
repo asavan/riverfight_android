@@ -25,4 +25,10 @@
     }
         ]
     </string>
+    <string name="launch_determinant">Determinant</string>
+    <string name="other_games">Other games</string>
+    <string name="palneta">palneta</string>
+    <string name="launch_localhost">localhost</string>
+    <string name="launch_real_ip">Real IP</string>
+    <string name="launch_twa_local">Launch in app local</string>
 </resources>

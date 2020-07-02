@@ -43,7 +43,7 @@ public class AndroidWebServerActivity extends Activity {
             host = getStaticHost(LOCAL_IP);
         }
         String webSocketHost = getSocketHost(formattedIpAddress);
-        TextView textIpAddress = (TextView) findViewById(R.id.ipaddr);
+        TextView textIpAddress = findViewById(R.id.ipaddr);
         textIpAddress.setText(getString(R.string.please, host));
 
         try {
@@ -59,18 +59,18 @@ public class AndroidWebServerActivity extends Activity {
             addButtonTwa("https://determinant.fun", null, null, null, R.id.button5);
             addButtonTwa("https://asavan.github.io", null, null, null, R.id.button6);
             addButtonTwa("http://palneta.ru", webSocketHost, host, "red", R.id.button7);
-            addButtonTwa(getStaticHost(LOCAL_IP) + "/.well-known/assetlinks.json", null, null, null, R.id.button8);
+            // addButtonTwa(getStaticHost(LOCAL_IP) + "/.well-known/assetlinks.json", null, null, null, R.id.button8);
             addButtonTwa("http://localhost", webSocketHost, host, "red", R.id.button9);
-            // launchTwa(host, webSocketHost, host, applicationContext);
+            launchTwa(host, webSocketHost, host, "red");
         } catch (IOException e) {
-            TextView textIpAddress2 = (TextView) findViewById(R.id.ipaddr2);
+            TextView textIpAddress2 = findViewById(R.id.ipaddr2);
             textIpAddress2.setText(Arrays.toString(e.getStackTrace()));
             Log.e("RIVER_FIGHT_TAG", "main", e);
         }
     }
 
     private void addButton(final String host, String socketHost, String staticHost) {
-        Button btn = (Button) findViewById(R.id.button1);
+        Button btn = findViewById(R.id.button1);
         btn.setOnClickListener(v -> {
             Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost, "red"));
             startActivity(new Intent(Intent.ACTION_VIEW, launchUri));
@@ -78,7 +78,7 @@ public class AndroidWebServerActivity extends Activity {
     }
 
     private void addButtonTwa(final String host, String socketHost, String staticHost, String color, int id) {
-        Button btn = (Button) findViewById(id);
+        Button btn = findViewById(id);
         btn.setOnClickListener(v -> launchTwa(host, socketHost, staticHost, color));
     }
 
@@ -108,7 +108,7 @@ public class AndroidWebServerActivity extends Activity {
         } catch (Exception e) {
             Log.e("RIVER_FIGHT_TAG", "getLaunchUrl", e);
         }
-        TextView textIpAddress2 = (TextView) findViewById(R.id.ipaddr2);
+        TextView textIpAddress2 = findViewById(R.id.ipaddr2);
         textIpAddress2.setText(b.toString());
         return b.toString();
     }

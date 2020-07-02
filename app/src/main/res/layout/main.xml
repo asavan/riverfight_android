@@ -29,7 +29,7 @@
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/launch_twa" />
+        android:text="@string/launch_twa_local" />
 
     <Button
         android:id="@+id/button3"
@@ -41,28 +41,28 @@
         android:id="@+id/button4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/launch_twa_atenalp" />
+        android:text="@string/launch_real_ip" />
 
 
     <Button
         android:id="@+id/button5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/launch_twa_atenalp" />
+        android:text="@string/launch_determinant" />
 
 
     <Button
         android:id="@+id/button6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/launch_twa_atenalp" />
+        android:text="@string/other_games" />
 
 
     <Button
         android:id="@+id/button7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/launch" />
+        android:text="@string/palneta" />
 
 
     <Button
@@ -75,6 +75,6 @@
         android:id="@+id/button9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/launch" />
+        android:text="@string/launch_localhost" />
 
 </LinearLayout>
