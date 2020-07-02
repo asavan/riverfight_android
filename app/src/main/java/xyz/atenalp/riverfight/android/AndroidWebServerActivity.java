@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.androidbrowserhelper.trusted.LauncherActivity;
+import com.google.androidbrowserhelper.trusted.TwaLauncher;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -53,9 +53,15 @@ public class AndroidWebServerActivity extends Activity {
                 webSocketServer.start(0);
             }
             addButton(host, webSocketHost, host);
-            addButton2(getStaticHost(LOCAL_IP), webSocketHost, host, applicationContext);
-            addButton3(WEB_GAME_URL, webSocketHost, host, applicationContext);
-            launchTwa(host, webSocketHost, host, applicationContext);
+            addButtonTwa(getStaticHost(LOCAL_IP), webSocketHost, host, "red", R.id.button2);
+            addButtonTwa(WEB_GAME_URL, webSocketHost, host, "red", R.id.button3);
+            addButtonTwa(host, webSocketHost, host, "red", R.id.button4);
+            addButtonTwa("https://determinant.fun", null, null, null, R.id.button5);
+            addButtonTwa("https://asavan.github.io", null, null, null, R.id.button6);
+            addButtonTwa("http://palneta.ru", webSocketHost, host, "red", R.id.button7);
+            addButtonTwa(getStaticHost(LOCAL_IP) + "/.well-known/assetlinks.json", null, null, null, R.id.button8);
+            addButtonTwa("http://localhost", webSocketHost, host, "red", R.id.button9);
+            // launchTwa(host, webSocketHost, host, applicationContext);
         } catch (IOException e) {
             TextView textIpAddress2 = (TextView) findViewById(R.id.ipaddr2);
             textIpAddress2.setText(Arrays.toString(e.getStackTrace()));
@@ -66,30 +72,29 @@ public class AndroidWebServerActivity extends Activity {
     private void addButton(final String host, String socketHost, String staticHost) {
         Button btn = (Button) findViewById(R.id.button1);
         btn.setOnClickListener(v -> {
-            Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost));
+            Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost, "red"));
             startActivity(new Intent(Intent.ACTION_VIEW, launchUri));
         });
     }
 
-    private void addButton2(final String host, String socketHost, String staticHost, Context context) {
-        Button btn = (Button) findViewById(R.id.button2);
-        btn.setOnClickListener(v -> launchTwa(host, socketHost, staticHost, context));
+    private void addButtonTwa(final String host, String socketHost, String staticHost, String color, int id) {
+        Button btn = (Button) findViewById(id);
+        btn.setOnClickListener(v -> launchTwa(host, socketHost, staticHost, color));
     }
 
-    private void addButton3(final String host, String socketHost, String staticHost, Context context) {
-        Button btn = (Button) findViewById(R.id.button3);
-        btn.setOnClickListener(v -> launchTwa(host, socketHost, staticHost, context));
+    private void launchTwa(String host, String socketHost, String staticHost, String color) {
+        Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost, color));
+        TwaLauncher launcher = new TwaLauncher(this);
+        launcher.launch(launchUri);
+        // startActivity(new Intent(Intent.ACTION_VIEW, launchUri, context, LauncherActivity.class));
     }
 
-    private void launchTwa(String host, String socketHost, String staticHost, Context context) {
-        Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost));
-        startActivity(new Intent(Intent.ACTION_VIEW, launchUri, context, LauncherActivity.class));
-    }
-
-    private String getLaunchUrl(String host, String socketHost, String staticHost) {
+    private String getLaunchUrl(String host, String socketHost, String staticHost, final String color) {
         StringBuilder b = new StringBuilder();
         b.append(host);
-        b.append("/?color=red");
+        if (color != null) {
+            b.append("/?color=").append(color);
+        }
         try {
             if (socketHost != null) {
                 b.append("&wh=");
