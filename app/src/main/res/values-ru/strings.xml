@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">Речной бой</string>
     <string name="launch">Запустить в браузере</string>
-    <string name="launch_twa">Запустить</string>
+    <string name="launch_twa_local">Запустить</string>
     <string name="launch_twa_atenalp">Запустить новейшую версию</string>
-    <string name="please">Зайдите на адрес %1$s!</string>
-    <string name="launch_determinant">Определитель</string>
-    <string name="palneta">palneta</string>
-    <string name="launch_localhost">localhost</string>
-    <string name="other_games">Другие игры</string>
-    <string name="launch_real_ip">Real IP</string>
-    <string name="launch_twa_local">Launch in app local</string>
+    <string name="launch_real_ip">Настоящий IP</string>
+    <string name="launch_first">Начать первым</string>
+    <string name="server_mode">Режим сервера</string>
+    <string name="ai">Сыграть с ботом</string>
+    <string name="launch_localhost">Запустить на localhost</string>
 </resources>

@@ -7,18 +7,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.google.androidbrowserhelper.trusted.TwaLauncher;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class AndroidWebServerActivity extends Activity {
@@ -26,6 +26,7 @@ public class AndroidWebServerActivity extends Activity {
     private static final int WEB_SOCKET_PORT = 8088;
     private static final String WEB_GAME_URL = "https://atenalp.xyz";
     public static final String LOCAL_IP = "127.0.0.1";
+    public static final String LOCALHOST = "localhost";
     private AndroidStaticAssetsServer server;
     private WebSocketBroadcastServer webSocketServer;
 
@@ -43,8 +44,6 @@ public class AndroidWebServerActivity extends Activity {
             host = getStaticHost(LOCAL_IP);
         }
         String webSocketHost = getSocketHost(formattedIpAddress);
-        TextView textIpAddress = findViewById(R.id.ipaddr);
-        textIpAddress.setText(getString(R.string.please, host));
 
         try {
             server = new AndroidStaticAssetsServer(applicationContext, STATIC_CONTENT_PORT, "www");
@@ -52,64 +51,104 @@ public class AndroidWebServerActivity extends Activity {
                 webSocketServer = new WebSocketBroadcastServer(WEB_SOCKET_PORT);
                 webSocketServer.start(0);
             }
-            addButton(host, webSocketHost, host);
-            addButtonTwa(getStaticHost(LOCAL_IP), webSocketHost, host, "red", R.id.button2);
-            addButtonTwa(WEB_GAME_URL, webSocketHost, host, "red", R.id.button3);
-            addButtonTwa(host, webSocketHost, host, "red", R.id.button4);
-            addButtonTwa("https://determinant.fun", null, null, null, R.id.button5);
-            addButtonTwa("https://asavan.github.io", null, null, null, R.id.button6);
-            addButtonTwa("http://palneta.ru", webSocketHost, host, "red", R.id.button7);
-            // addButtonTwa(getStaticHost(LOCAL_IP) + "/.well-known/assetlinks.json", null, null, null, R.id.button8);
-            addButtonTwa("http://localhost", webSocketHost, host, "red", R.id.button9);
-            launchTwa(host, webSocketHost, host, "red");
+
+            Map<String, String> mainParams = new LinkedHashMap<>();
+            mainParams.put("color", "red");
+            mainParams.put("wh", webSocketHost);
+            mainParams.put("sh", host);
+
+            {
+                addButton(host, mainParams, R.id.button1);
+                addButtonTwa(getStaticHost(LOCAL_IP), mainParams, R.id.button2);
+                addButtonTwa(WEB_GAME_URL, mainParams, R.id.button3);
+                addButtonTwa(host, mainParams, R.id.button4, host);
+                addButtonTwa(getStaticHost(LOCALHOST), mainParams, R.id.button9);
+            }
+
+            {
+                Map<String, String> b = new LinkedHashMap<>();
+                b.put("wh", webSocketHost);
+                b.put("sh", host);
+                addButtonTwa(host, b, R.id.button5);
+            }
+
+            {
+                Map<String, String> b = new LinkedHashMap<>();
+                b.put("currentMode", "server");
+                b.put("wh", webSocketHost);
+                b.put("sh", host);
+                addButtonTwa(host, b, R.id.button6);
+            }
+
+            {
+                Map<String, String> b = new LinkedHashMap<>();
+                b.put("currentMode", "ai");
+                addButton(getStaticHost(LOCALHOST), b, R.id.button7);
+            }
+
+            launchTwa(getStaticHost(LOCAL_IP), mainParams);
         } catch (IOException e) {
-            TextView textIpAddress2 = findViewById(R.id.ipaddr2);
-            textIpAddress2.setText(Arrays.toString(e.getStackTrace()));
             Log.e("RIVER_FIGHT_TAG", "main", e);
         }
     }
 
-    private void addButton(final String host, String socketHost, String staticHost) {
-        Button btn = findViewById(R.id.button1);
+    private void addButton(final String host, Map<String, String> parameters, int id) {
+        Button btn = findViewById(id);
         btn.setOnClickListener(v -> {
-            Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost, "red"));
+            Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
             startActivity(new Intent(Intent.ACTION_VIEW, launchUri));
         });
     }
 
-    private void addButtonTwa(final String host, String socketHost, String staticHost, String color, int id) {
-        Button btn = findViewById(id);
-        btn.setOnClickListener(v -> launchTwa(host, socketHost, staticHost, color));
+    private void addButtonTwa(String host, Map<String, String> parameters, int id) {
+        addButtonTwa(host, parameters, id, null);
     }
 
-    private void launchTwa(String host, String socketHost, String staticHost, String color) {
-        Uri launchUri = Uri.parse(getLaunchUrl(host, socketHost, staticHost, color));
+    private void addButtonTwa(String host, Map<String, String> parameters, int id, String text) {
+        Button btn = findViewById(id);
+        if (text != null) {
+            btn.setText(text);
+        }
+        btn.setOnClickListener(v -> launchTwa(host, parameters));
+    }
+
+    private void launchTwa(String host, Map<String, String> parameters) {
+        Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
         TwaLauncher launcher = new TwaLauncher(this);
         launcher.launch(launchUri);
         // startActivity(new Intent(Intent.ACTION_VIEW, launchUri, context, LauncherActivity.class));
     }
 
-    private String getLaunchUrl(String host, String socketHost, String staticHost, final String color) {
+    private static String urlEncodeUTF8(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    private static String mapToParamString(Map<String, String> parameters) {
+        StringBuilder acc = new StringBuilder();
+        boolean firstElem = true;
+        for (Map.Entry<String, String> p : parameters.entrySet()) {
+            if (!firstElem) {
+                acc.append("&");
+            }
+            firstElem = false;
+            acc.append(p.getKey()).append("=").append(urlEncodeUTF8(p.getValue()));
+        }
+        return acc.toString();
+    }
+
+    private static String getLaunchUrl(String host, Map<String, String> parameters) {
         StringBuilder b = new StringBuilder();
         b.append(host);
-        if (color != null) {
-            b.append("/?color=").append(color);
+        if (!host.endsWith("/")) {
+            b.append("/");
         }
-        try {
-            if (socketHost != null) {
-                b.append("&wh=");
-                b.append(URLEncoder.encode(socketHost, StandardCharsets.UTF_8.toString()));
-            }
-
-            if (staticHost != null) {
-                b.append("&sh=");
-                b.append(URLEncoder.encode(staticHost, StandardCharsets.UTF_8.toString()));
-            }
-        } catch (Exception e) {
-            Log.e("RIVER_FIGHT_TAG", "getLaunchUrl", e);
+        if (parameters != null) {
+            b.append("?").append(mapToParamString(parameters));
         }
-        TextView textIpAddress2 = findViewById(R.id.ipaddr2);
-        textIpAddress2.setText(b.toString());
         return b.toString();
     }
 

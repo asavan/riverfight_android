@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">River fight</string>
     <string name="launch">Launch in browser</string>
-    <string name="launch_twa">Launch in app</string>
     <string name="launch_twa_atenalp">Launch newest version</string>
-    <string name="please">Please access %1$s!</string>
     <string name="asset_statements" translatable="false">
     [{
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
@@ -25,10 +23,10 @@
     }
         ]
     </string>
-    <string name="launch_determinant">Determinant</string>
-    <string name="other_games">Other games</string>
-    <string name="palneta">palneta</string>
+    <string name="launch_first">Start first</string>
+    <string name="server_mode">Server mode</string>
     <string name="launch_localhost">localhost</string>
     <string name="launch_real_ip">Real IP</string>
     <string name="launch_twa_local">Launch in app local</string>
+    <string name="ai">AI only</string>
 </resources>
