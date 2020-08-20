@@ -29,4 +29,5 @@
     <string name="launch_real_ip">Real IP</string>
     <string name="launch_twa_local">Launch in app local</string>
     <string name="ai">AI only</string>
+    <string name="webview">Webview</string>
 </resources>

@@ -1,6 +1,5 @@
 package xyz.atenalp.riverfight.android;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,13 +19,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.appcompat.app.AppCompatActivity;
 
-public class AndroidWebServerActivity extends Activity {
+
+public class AndroidWebServerActivity extends AppCompatActivity {
     private static final int STATIC_CONTENT_PORT = 8080;
     private static final int WEB_SOCKET_PORT = 8088;
     private static final String WEB_GAME_URL = "https://atenalp.xyz";
     public static final String LOCAL_IP = "127.0.0.1";
     public static final String LOCALHOST = "localhost";
+    public static final String WEB_VIEW_URL = "file:///android_asset/www/index.html";
     private AndroidStaticAssetsServer server;
     private WebSocketBroadcastServer webSocketServer;
 
@@ -57,38 +59,49 @@ public class AndroidWebServerActivity extends Activity {
             mainParams.put("wh", webSocketHost);
             mainParams.put("sh", host);
 
-            {
-                addButton(host, mainParams, R.id.button1);
-                addButtonTwa(getStaticHost(LOCAL_IP), mainParams, R.id.button2);
-                addButtonTwa(WEB_GAME_URL, mainParams, R.id.button3);
-                addButtonTwa(host, mainParams, R.id.button4, host);
-                addButtonTwa(getStaticHost(LOCALHOST), mainParams, R.id.button9);
-            }
-
-            {
-                Map<String, String> b = new LinkedHashMap<>();
-                b.put("wh", webSocketHost);
-                b.put("sh", host);
-                addButtonTwa(host, b, R.id.button5);
-            }
-
-            {
-                Map<String, String> b = new LinkedHashMap<>();
-                b.put("currentMode", "server");
-                b.put("wh", webSocketHost);
-                b.put("sh", host);
-                addButtonTwa(host, b, R.id.button6);
-            }
-
-            {
-                Map<String, String> b = new LinkedHashMap<>();
-                b.put("currentMode", "ai");
-                addButton(getStaticHost(LOCALHOST), b, R.id.button7);
-            }
+            addButtons(host, webSocketHost, mainParams);
 
             launchTwa(getStaticHost(LOCAL_IP), mainParams);
+            // launchWebView(WEB_VIEW_URL, mainParams);
+            // launchWebView(getStaticHost(LOCAL_IP), mainParams);
         } catch (IOException e) {
             Log.e("RIVER_FIGHT_TAG", "main", e);
+        }
+    }
+
+    private void addButtons(String host, String webSocketHost, Map<String, String> mainParams) {
+        {
+            addButton(host, mainParams, R.id.button1);
+            addButtonTwa(getStaticHost(LOCAL_IP), mainParams, R.id.button2);
+            addButtonTwa(WEB_GAME_URL, mainParams, R.id.button3);
+            addButtonTwa(host, mainParams, R.id.button4, host);
+            addButtonTwa(getStaticHost(LOCALHOST), mainParams, R.id.button9);
+            // addButtonWebView("file:///android_asset/www/index.html", mainParams, R.id.webviewb);
+            addButtonWebView(WEB_GAME_URL, mainParams, R.id.webviewb);
+            addButtonWebView(getStaticHost(LOCAL_IP), mainParams, R.id.button10);
+            addButtonWebView(WEB_VIEW_URL, mainParams, R.id.button11);
+            addButtonWebView(WEB_VIEW_URL, null, R.id.button12);
+        }
+
+        {
+            Map<String, String> b = new LinkedHashMap<>();
+            b.put("wh", webSocketHost);
+            b.put("sh", host);
+            addButtonTwa(host, b, R.id.button5);
+        }
+
+        {
+            Map<String, String> b = new LinkedHashMap<>();
+            b.put("currentMode", "server");
+            b.put("wh", webSocketHost);
+            b.put("sh", host);
+            addButtonTwa(host, b, R.id.button6);
+        }
+
+        {
+            Map<String, String> b = new LinkedHashMap<>();
+            b.put("currentMode", "ai");
+            addButton(getStaticHost(LOCALHOST), b, R.id.button7);
         }
     }
 
@@ -98,6 +111,21 @@ public class AndroidWebServerActivity extends Activity {
             Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
             startActivity(new Intent(Intent.ACTION_VIEW, launchUri));
         });
+    }
+
+    private void addButtonWebView(final String host, Map<String, String> parameters, int id) {
+        Button btn = findViewById(id);
+        btn.setOnClickListener(v -> {
+            launchWebView(host, parameters);
+        });
+    }
+
+    private void launchWebView(String host, Map<String, String> parameters) {
+        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+        String launchUrl = getLaunchUrl(host, parameters);
+        Log.i("RIVER_FIGHT_TAG", launchUrl);
+        intent.putExtra("url", launchUrl);
+        startActivity(intent);
     }
 
     private void addButtonTwa(String host, Map<String, String> parameters, int id) {
@@ -143,9 +171,9 @@ public class AndroidWebServerActivity extends Activity {
     private static String getLaunchUrl(String host, Map<String, String> parameters) {
         StringBuilder b = new StringBuilder();
         b.append(host);
-        if (!host.endsWith("/")) {
-            b.append("/");
-        }
+//        if (!host.endsWith("/") && parameters != null) {
+//            b.append("/");
+//        }
         if (parameters != null) {
             b.append("?").append(mapToParamString(parameters));
         }
