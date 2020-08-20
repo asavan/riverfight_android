@@ -54,14 +54,14 @@ public class AndroidWebServerActivity extends AppCompatActivity {
                 webSocketServer.start(0);
             }
 
+            addButtons(host, webSocketHost);
+
             Map<String, String> mainParams = new LinkedHashMap<>();
             mainParams.put("color", "red");
             mainParams.put("wh", webSocketHost);
             mainParams.put("sh", host);
-
-            addButtons(host, webSocketHost, mainParams);
-
             launchTwa(getStaticHost(LOCAL_IP), mainParams);
+
             // launchWebView(WEB_VIEW_URL, mainParams);
             // launchWebView(getStaticHost(LOCAL_IP), mainParams);
         } catch (IOException e) {
@@ -69,7 +69,13 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         }
     }
 
-    private void addButtons(String host, String webSocketHost, Map<String, String> mainParams) {
+    private void addButtons(String host, String webSocketHost) {
+        Map<String, String> mainParams = new LinkedHashMap<>();
+        mainParams.put("color", "red");
+        mainParams.put("wh", webSocketHost);
+        mainParams.put("sh", host);
+        mainParams.put("useSound", "1");
+
         {
             addButton(host, mainParams, R.id.button1);
             addButtonTwa(getStaticHost(LOCAL_IP), mainParams, R.id.button2);
