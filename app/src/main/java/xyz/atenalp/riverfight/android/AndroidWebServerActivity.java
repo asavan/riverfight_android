@@ -9,7 +9,6 @@ import android.widget.Button;
 
 import com.google.androidbrowserhelper.trusted.TwaLauncher;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -25,7 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AndroidWebServerActivity extends AppCompatActivity {
     private static final int STATIC_CONTENT_PORT = 8080;
     private static final int WEB_SOCKET_PORT = 8088;
-    private static final String WEB_GAME_URL = "https://atenalp.xyz";
+    private static final String WEB_GAME_URL = "https://riverfight.ml";
     public static final String LOCAL_IP = "127.0.0.1";
     public static final String LOCALHOST = "localhost";
     public static final String WEB_VIEW_URL = "file:///android_asset/www/index.html";
@@ -60,11 +59,12 @@ public class AndroidWebServerActivity extends AppCompatActivity {
             mainParams.put("color", "red");
             mainParams.put("wh", webSocketHost);
             mainParams.put("sh", host);
+            // mainParams.put("useSound", "1");
             launchTwa(getStaticHost(LOCAL_IP), mainParams);
 
             // launchWebView(WEB_VIEW_URL, mainParams);
             // launchWebView(getStaticHost(LOCAL_IP), mainParams);
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("RIVER_FIGHT_TAG", "main", e);
         }
     }
@@ -78,21 +78,16 @@ public class AndroidWebServerActivity extends AppCompatActivity {
 
         {
             addButton(host, mainParams, R.id.button1);
-            addButtonTwa(getStaticHost(LOCAL_IP), mainParams, R.id.button2);
             addButtonTwa(WEB_GAME_URL, mainParams, R.id.button3);
             addButtonTwa(host, mainParams, R.id.button4, host);
-            addButtonTwa(getStaticHost(LOCALHOST), mainParams, R.id.button9);
-            // addButtonWebView("file:///android_asset/www/index.html", mainParams, R.id.webviewb);
-            addButtonWebView(WEB_GAME_URL, mainParams, R.id.webviewb);
-            addButtonWebView(getStaticHost(LOCAL_IP), mainParams, R.id.button10);
-            addButtonWebView(WEB_VIEW_URL, mainParams, R.id.button11);
-            addButtonWebView(WEB_VIEW_URL, null, R.id.button12);
+            addButtonWebView(WEB_VIEW_URL, mainParams, R.id.webviewb);
         }
 
         {
             Map<String, String> b = new LinkedHashMap<>();
             b.put("wh", webSocketHost);
             b.put("sh", host);
+            b.put("useSound", "1");
             addButtonTwa(host, b, R.id.button5);
         }
 
@@ -107,7 +102,7 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         {
             Map<String, String> b = new LinkedHashMap<>();
             b.put("currentMode", "ai");
-            addButton(getStaticHost(LOCALHOST), b, R.id.button7);
+            addButtonWebView(WEB_VIEW_URL, b, R.id.button7);
         }
     }
 
