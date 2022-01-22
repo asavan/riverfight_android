@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -39,12 +40,14 @@ public class AndroidWebServerActivity extends AppCompatActivity {
 
         String formattedIpAddress = getIPAddress();
         final String host;
+        final String webSocketHost;
         if (formattedIpAddress != null) {
             host = getStaticHost(formattedIpAddress);
+            webSocketHost = getSocketHost(formattedIpAddress);
         } else {
             host = getStaticHost(LOCAL_IP);
+            webSocketHost = getSocketHost(LOCAL_IP);
         }
-        String webSocketHost = getSocketHost(formattedIpAddress);
 
         try {
             server = new AndroidStaticAssetsServer(applicationContext, STATIC_CONTENT_PORT, "www");
@@ -106,7 +109,7 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         }
     }
 
-    private void addButton(final String host, Map<String, String> parameters, int id) {
+    private void addButton(@NonNull final String host, Map<String, String> parameters, int id) {
         Button btn = findViewById(id);
         btn.setOnClickListener(v -> {
             Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
@@ -114,14 +117,14 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         });
     }
 
-    private void addButtonWebView(final String host, Map<String, String> parameters, int id) {
+    private void addButtonWebView(@NonNull final String host, Map<String, String> parameters, int id) {
         Button btn = findViewById(id);
         btn.setOnClickListener(v -> {
             launchWebView(host, parameters);
         });
     }
 
-    private void launchWebView(String host, Map<String, String> parameters) {
+    private void launchWebView(@NonNull String host, Map<String, String> parameters) {
         Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
         String launchUrl = getLaunchUrl(host, parameters);
         Log.i("RIVER_FIGHT_TAG", launchUrl);
@@ -129,11 +132,11 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void addButtonTwa(String host, Map<String, String> parameters, int id) {
+    private void addButtonTwa(@NonNull String host, Map<String, String> parameters, int id) {
         addButtonTwa(host, parameters, id, null);
     }
 
-    private void addButtonTwa(String host, Map<String, String> parameters, int id, String text) {
+    private void addButtonTwa(@NonNull String host, Map<String, String> parameters, int id, String text) {
         Button btn = findViewById(id);
         if (text != null) {
             btn.setText(text);
@@ -141,7 +144,7 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         btn.setOnClickListener(v -> launchTwa(host, parameters));
     }
 
-    private void launchTwa(String host, Map<String, String> parameters) {
+    private void launchTwa(@NonNull String host, Map<String, String> parameters) {
         Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
         TwaLauncher launcher = new TwaLauncher(this);
         launcher.launch(launchUri);
@@ -169,12 +172,10 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         return acc.toString();
     }
 
-    private static String getLaunchUrl(String host, Map<String, String> parameters) {
+    @NonNull
+    private static String getLaunchUrl(@NonNull String host, Map<String, String> parameters) {
         StringBuilder b = new StringBuilder();
         b.append(host);
-//        if (!host.endsWith("/") && parameters != null) {
-//            b.append("/");
-//        }
         if (parameters != null) {
             b.append("?").append(mapToParamString(parameters));
         }
@@ -182,29 +183,30 @@ public class AndroidWebServerActivity extends AppCompatActivity {
     }
 
 
-    private static boolean isHostLocal(String host) {
+    private static boolean isHostLocal(@NonNull String host) {
         return host.contains(LOCAL_IP);
     }
-
 
     public static String getIPAddress() {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
 
-            for (NetworkInterface interface_ : interfaces) {
-                for (InetAddress inetAddress : Collections.list(interface_.getInetAddresses())) {
+            for (NetworkInterface anInterface : interfaces) {
+                for (InetAddress inetAddress : Collections.list(anInterface.getInetAddresses())) {
                     if (inetAddress.isLoopbackAddress()) {
                         continue;
                     }
 
                     String ipAddr = inetAddress.getHostAddress();
+                    if (ipAddr == null) {
+                        continue;
+                    }
                     boolean isIPv4 = ipAddr.indexOf(':') < 0;
                     if (!isIPv4) {
                         continue;
                     }
                     return ipAddr;
                 }
-
             }
         } catch (Exception e) {
             Log.e("RIVER_FIGHT_TAG", "getIPAddress", e);
@@ -212,11 +214,13 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         return null;
     }
 
-    private static String getStaticHost(String ip) {
+    @NonNull
+    private static String getStaticHost(@NonNull String ip) {
         return "http://" + ip + ":" + STATIC_CONTENT_PORT;
     }
 
-    private static String getSocketHost(String ip) {
+    @NonNull
+    private static String getSocketHost(@NonNull String ip) {
         return ip + ":" + WEB_SOCKET_PORT;
     }
 
