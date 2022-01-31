@@ -8,8 +8,8 @@ android {
         applicationId "xyz.atenalp.riverfight.android"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 11
-        versionName "1.10"
+        versionCode 13
+        versionName "1.12"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

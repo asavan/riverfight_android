@@ -112,8 +112,12 @@ public class AndroidWebServerActivity extends AppCompatActivity {
     private void addButton(@NonNull final String host, Map<String, String> parameters, int id) {
         Button btn = findViewById(id);
         btn.setOnClickListener(v -> {
-            Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
-            startActivity(new Intent(Intent.ACTION_VIEW, launchUri));
+            try {
+                Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
+                startActivity(new Intent(Intent.ACTION_VIEW, launchUri));
+            } catch (Exception e) {
+                Log.e("RIVER_FIGHT_TAG", "startActivity", e);
+            }
         });
     }
 
@@ -145,9 +149,13 @@ public class AndroidWebServerActivity extends AppCompatActivity {
     }
 
     private void launchTwa(@NonNull String host, Map<String, String> parameters) {
-        Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
-        TwaLauncher launcher = new TwaLauncher(this);
-        launcher.launch(launchUri);
+        try {
+            Uri launchUri = Uri.parse(getLaunchUrl(host, parameters));
+            TwaLauncher launcher = new TwaLauncher(this);
+            launcher.launch(launchUri);
+        } catch (Exception e) {
+            Log.e("RIVER_FIGHT_TAG", "twa", e);
+        }
         // startActivity(new Intent(Intent.ACTION_VIEW, launchUri, context, LauncherActivity.class));
     }
 

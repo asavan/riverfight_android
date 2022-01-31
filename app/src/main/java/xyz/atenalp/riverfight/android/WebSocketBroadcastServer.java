@@ -23,7 +23,7 @@ public class WebSocketBroadcastServer extends NanoWSD {
     @Override
     public void stop() {
         try {
-            disconectAll();
+            disconnectAll();
         } catch (Exception ex) {
             // ignore
         }
@@ -38,23 +38,6 @@ public class WebSocketBroadcastServer extends NanoWSD {
         list.remove(user);
     }
 
-    public void sendToAll(String str) {
-        for (WebSocket ws : list) {
-            if (ws != null) {
-                try {
-                    ws.send(str);
-                } catch (IOException e) {
-                    System.out.println("sending error.....");
-                    try {
-                        ws.close(WebSocketFrame.CloseCode.InvalidFramePayloadData, "reqrement", false);
-                    } catch (IOException e1) {
-                        throw new RuntimeException(e1);
-                    }
-                }
-            }
-        }
-    }
-
     public void broadcast(WebSocketFrame message) {
         try {
             message.setUnmasked();
@@ -66,14 +49,10 @@ public class WebSocketBroadcastServer extends NanoWSD {
         }
     }
 
-    public void disconectAll() {
+    private void disconnectAll() throws IOException {
         for (WebSocket ws : list) {
             if (ws != null) {
-                try {
-                    ws.close(NanoWSD.WebSocketFrame.CloseCode.InvalidFramePayloadData, "reqrement", false);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                ws.close(NanoWSD.WebSocketFrame.CloseCode.NormalClosure, "exit", false);
             }
         }
     }
