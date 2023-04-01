@@ -62,6 +62,7 @@ public class AndroidWebServerActivity extends AppCompatActivity {
             mainParams.put("color", "red");
             mainParams.put("wh", webSocketHost);
             mainParams.put("sh", host);
+            mainParams.put("currentMode", "net");
             // mainParams.put("useSound", "1");
             launchTwa(getStaticHost(LOCAL_IP), mainParams);
 
@@ -78,6 +79,7 @@ public class AndroidWebServerActivity extends AppCompatActivity {
         mainParams.put("wh", webSocketHost);
         mainParams.put("sh", host);
         mainParams.put("useSound", "1");
+        mainParams.put("currentMode", "net");
 
         {
             addButton(host, mainParams, R.id.button1);
