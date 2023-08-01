@@ -1,6 +1,7 @@
 package xyz.atenalp.riverfight.android;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -17,6 +18,8 @@ public class WebViewActivity extends AppCompatActivity {
         WebView webView = findViewById(R.id.web);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webView.setBackgroundColor(Color.TRANSPARENT);
         String url = getIntent().getStringExtra("url");
         webView.loadUrl(url);
     }

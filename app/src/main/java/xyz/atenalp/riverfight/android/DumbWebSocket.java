@@ -28,7 +28,7 @@ class DumbWebSocket extends WebSocket {
 
     @Override
     protected void onMessage(WebSocketFrame message) {
-        server.broadcast(message);
+        server.broadcast(this, message);
     }
 
     @Override

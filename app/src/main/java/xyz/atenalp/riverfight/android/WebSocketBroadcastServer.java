@@ -1,5 +1,7 @@
 package xyz.atenalp.riverfight.android;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +12,12 @@ public class WebSocketBroadcastServer extends NanoWSD {
 
     private final List<WebSocket> list;
 
-    public WebSocketBroadcastServer(int port) {
+    public WebSocketBroadcastServer(Context context, int port, boolean secure) {
         super(port);
         list = new ArrayList<>();
+        if (secure) {
+            SslHelper.addSslSupport(context, this);
+        }
     }
 
     @Override
@@ -23,7 +28,7 @@ public class WebSocketBroadcastServer extends NanoWSD {
     @Override
     public void stop() {
         try {
-            disconnectAll();
+            disconectAll();
         } catch (Exception ex) {
             // ignore
         }
@@ -38,21 +43,25 @@ public class WebSocketBroadcastServer extends NanoWSD {
         list.remove(user);
     }
 
-    public void broadcast(WebSocketFrame message) {
+    public void broadcast(WebSocket sender, WebSocketFrame message) {
         try {
             message.setUnmasked();
             for (WebSocket ws : list) {
-                ws.sendFrame(message);
+                if (ws != sender) {
+                    ws.sendFrame(message);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void disconnectAll() throws IOException {
+    private void disconectAll() {
         for (WebSocket ws : list) {
-            if (ws != null) {
-                ws.close(NanoWSD.WebSocketFrame.CloseCode.NormalClosure, "exit", false);
+            try {
+                ws.close(WebSocketFrame.CloseCode.NormalClosure, "exit", false);
+            } catch (Exception e) {
+                // ignore
             }
         }
     }

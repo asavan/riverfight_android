@@ -11,18 +11,20 @@ import fi.iki.elonen.NanoHTTPD;
 public class AndroidStaticAssetsServer extends NanoHTTPD {
     private final Context context;
     private final String folderToServe;
-    private static final String DEFAULT_STATIC_FOLDER = "dist";
+    private static final String DEFAULT_STATIC_FOLDER = "www";
 
-    public AndroidStaticAssetsServer(Context context, int port, String folderToServe) throws IOException {
+    public AndroidStaticAssetsServer(Context context, int port, boolean secure, String folderToServe) throws IOException {
         super(port);
         this.context = context;
         this.folderToServe = folderToServe;
+        if (secure) {
+            SslHelper.addSslSupport(context, this);
+        }
         start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-
     }
 
-    public AndroidStaticAssetsServer(Context context, int port) throws IOException {
-        this(context, port, DEFAULT_STATIC_FOLDER);
+    public AndroidStaticAssetsServer(Context context, int port, boolean secure) throws IOException {
+        this(context, port, secure, DEFAULT_STATIC_FOLDER);
     }
 
     // override here
@@ -53,7 +55,7 @@ public class AndroidStaticAssetsServer extends NanoHTTPD {
             InputStream is = context.getResources().getAssets().open(fileWithFolder);
             return newChunkedResponse(Response.Status.OK, getMimeTypeForFile(file), is);
         } catch (IOException e) {
-            Log.e("RIVER_FIGHT_TAG", "AndroidStaticAssetsServer", e);
+            Log.e("STATIC_SERVER_TAG", "AndroidStaticAssetsServer", e);
         }
         return notFound();
     }
