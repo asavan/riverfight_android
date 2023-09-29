@@ -1,14 +1,13 @@
 package xyz.atenalp.riverfight.android;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class WebViewActivity extends AppCompatActivity {
+public class WebViewActivity extends Activity {
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override

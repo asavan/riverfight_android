@@ -7,21 +7,20 @@
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
         \"target\": {
             \"namespace\": \"web\",
-            \"site\": \"http://127.0.0.1:8080\"}
-    },
+            \"site\": \"http://localhost:8080\"}
+        },
         {
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
         \"target\": {
             \"namespace\": \"web\",
-            \"site\": \"http://localhost:8080\"}
+            \"site\": \"http://localhost\"}
     },
-                {
+    {
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
         \"target\": {
             \"namespace\": \"web\",
-            \"site\": \"https://determinant.fun\"}
-    }
-        ]
+            \"site\": \"https://asavan.github.io\"}
+    }]
     </string>
     <string name="launch_first">Start first</string>
     <string name="server_mode">Server mode</string>
