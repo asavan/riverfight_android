@@ -34,7 +34,7 @@ public class AndroidWebServerActivity extends Activity {
             mainParams.put("color", "red");
             mainParams.put("wh", webSocketHost);
             mainParams.put("sh", host);
-            mainParams.put("currentMode", "net");
+            mainParams.put("mode", "net");
             // mainParams.put("useSound", "1");
             btnUtils.launchTwa(hostUtils.getStaticHost(IpUtils.LOCALHOST), mainParams);
 
@@ -55,7 +55,7 @@ public class AndroidWebServerActivity extends Activity {
         mainParams.put("wh", webSocketHost);
         mainParams.put("sh", host);
         mainParams.put("useSound", "1");
-        mainParams.put("currentMode", "net");
+        mainParams.put("mode", "match");
 
         {
             btnUtils.addButtonBrowser(host, mainParams, R.id.button1);
@@ -73,7 +73,7 @@ public class AndroidWebServerActivity extends Activity {
 
         {
             Map<String, String> b = new LinkedHashMap<>();
-            b.put("currentMode", "server");
+            b.put("mode", "server");
             b.put("wh", webSocketHost);
             b.put("sh", host);
             btnUtils.addButtonTwa(hostUtils.getStaticHost(IpUtils.LOCALHOST), b, R.id.button6);
@@ -81,8 +81,9 @@ public class AndroidWebServerActivity extends Activity {
 
         {
             Map<String, String> b = new LinkedHashMap<>();
-            b.put("currentMode", "ai");
+            b.put("mode", "ai");
             btnUtils.addButtonWebView(WEB_VIEW_URL, b, R.id.button7);
+            btnUtils.addButtonWebView(hostUtils.getStaticHost(IpUtils.LOCALHOST), b, R.id.webviewlocalhost);
         }
     }
 

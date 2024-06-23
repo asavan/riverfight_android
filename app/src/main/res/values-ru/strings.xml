@@ -8,5 +8,6 @@
     <string name="server_mode">Режим сервера</string>
     <string name="ai">Сыграть с ботом</string>
     <string name="webview">Webview</string>
+    <string name="webview_localhost">Webview localhost</string>
     <string name="launch_localhost">Запустить на localhost</string>
 </resources>
