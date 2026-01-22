@@ -56,6 +56,7 @@ public class AndroidWebServerActivity extends Activity {
         mainParams.put("sh", host);
         mainParams.put("useSound", "1");
         mainParams.put("mode", "match");
+        mainParams.put("lang", "ru");
 
         {
             btnUtils.addButtonBrowser(host, mainParams, R.id.button1);
