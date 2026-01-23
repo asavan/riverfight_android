@@ -14,7 +14,7 @@ android {
         applicationId "xyz.atenalp.riverfight.android"
         minSdkVersion 21
         targetSdkVersion 36
-        versionCode 20
+        versionCode 21
         versionName "1.4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
